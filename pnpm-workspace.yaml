@@ -1,0 +1,8 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# pnpm 11: one map, explicit true/false per package with a build script.
+allowBuilds:
+  "@nestjs/core": false # script is just `opencollective` (donation prompt) — skip
+  unrs-resolver: true # native binary used by eslint — build it
