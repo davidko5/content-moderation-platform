@@ -7,7 +7,7 @@ export class ContentController {
   constructor(private contentService: ContentService) {}
 
   @Post()
-  ingestContent(@Body() body: CreateContentRequestDto) {
-    return this.contentService.ingestContent(body);
+  submit(@Body() dto: CreateContentRequestDto) {
+    return this.contentService.submit(dto);
   }
 }
