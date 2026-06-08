@@ -2,13 +2,15 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CreateContentRequestDto } from './dto/create-content-request.dto';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import * as schema from '../db/schema';
-import { DRIZZLE } from 'src/db/db.module';
+import { DRIZZLE } from '../db/db.module';
+import { RabbitService } from '../rabbit/rabbit.service';
 
 @Injectable()
 export class ContentService {
   constructor(
     @Inject(DRIZZLE)
     private readonly db: NodePgDatabase<typeof schema>,
+    private readonly rabbitService: RabbitService,
   ) {}
 
   async submit(dto: CreateContentRequestDto) {
@@ -19,6 +21,13 @@ export class ContentService {
         status: 'pending',
       })
       .returning();
+
+    await this.rabbitService.publishContentUploaded({
+      contentId: row.id,
+      type: row.type,
+      text: row.text,
+      createdAt: row.createdAt.toISOString(),
+    });
 
     return row;
   }

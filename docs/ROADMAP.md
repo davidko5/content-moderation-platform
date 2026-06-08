@@ -21,7 +21,7 @@ _architecture_; this is the order I build it in to _learn_ it.
 
 ## Status
 
-- **Current:** M0 — not started.
+- **Current:** M0 done (one event across the wire). Next: M1.
 - **2-month target = M0–M5** (re-baselined). At ~10–15 focused hrs/week, first-ever
   RabbitMQ + backend tests + Testcontainers, M0–M5 _is_ a full honest 2 months — and it's
   already the whole core interview story (choreography → outbox → signed webhooks → SKIP
@@ -41,14 +41,14 @@ _architecture_; this is the order I build it in to _learn_ it.
 
 _Goal: one event flows from one service to another over a real broker._
 
-- [ ] pnpm workspace: `apps/ingest`, `apps/classification`, `packages/events`
-- [ ] `docker-compose` with **RabbitMQ + Postgres only** (nothing else yet)
-- [ ] `packages/events`: define the `content.uploaded` event type, export it
-- [ ] Ingest: `POST /content` validates input, inserts a content row via Drizzle
-- [ ] Ingest: publish `content.uploaded` after the insert
-- [ ] Classification: connect, declare queue/binding, consume `content.uploaded`,
+- [x] pnpm workspace: `apps/ingest`, `apps/classification`, `packages/events`
+- [x] `docker-compose` with **RabbitMQ + Postgres only** (nothing else yet)
+- [x] `packages/events`: define the `content.uploaded` event type, export it
+- [x] Ingest: `POST /content` validates input, inserts a content row via Drizzle
+- [x] Ingest: publish `content.uploaded` after the insert
+- [x] Classification: connect, declare queue/binding, consume `content.uploaded`,
       log it, ack it. **Decision logic fully stubbed** (no model).
-- [ ] Prove it: POST → consumer logs the message and acks it. I can explain
+- [x] Prove it: POST → consumer logs the message and acks it. I can explain
       exchange vs queue vs binding.
 
 ### M1 — Choreography loop, stubbed brain · NEW: multi-hop + closing the loop

@@ -12,6 +12,7 @@ async function bootstrap() {
       transform: true, // turn body into the DTO class + coerce types
     }),
   );
-  await app.listen(process.env.PORT ?? 3000);
+  app.enableShutdownHooks();
+  await app.listen(process.env.PORT ?? 6000);
 }
 bootstrap();
