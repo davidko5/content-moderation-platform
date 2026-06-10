@@ -13,6 +13,7 @@ export const DRIZZLE = Symbol('DRIZZLE');
       useFactory: () =>
         drizzle(new Pool({ connectionString: process.env.DATABASE_URL }), {
           schema: schema,
+          casing: 'snake_case',
         }),
     },
   ],

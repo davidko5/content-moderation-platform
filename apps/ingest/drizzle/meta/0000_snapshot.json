@@ -1,5 +1,5 @@
 {
-  "id": "937860b1-8bf3-4a7e-988d-088cdb57a7df",
+  "id": "c2d9531f-4c4b-40ad-8e6d-5e709a6dd711",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -14,6 +14,13 @@
           "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
+        },
+        "tenant_id": {
+          "name": "tenant_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'00000000-0000-0000-0000-000000000001'"
         },
         "type": {
           "name": "type",
@@ -36,8 +43,8 @@
           "notNull": true,
           "default": "'pending'"
         },
-        "createdAt": {
-          "name": "createdAt",
+        "created_at": {
+          "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,

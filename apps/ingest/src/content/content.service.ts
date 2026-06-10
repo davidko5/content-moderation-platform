@@ -24,6 +24,7 @@ export class ContentService {
 
     await this.rabbitService.publishContentUploaded({
       contentId: row.id,
+      tenantId: row.tenantId,
       type: row.type,
       text: row.text,
       createdAt: row.createdAt.toISOString(),
