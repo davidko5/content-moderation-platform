@@ -21,7 +21,7 @@ _architecture_; this is the order I build it in to _learn_ it.
 
 ## Status
 
-- **Current:** M0 done (one event across the wire). Next: M1.
+- **Current:** M1 done (choreography loop closed; decision flows back to Ingest). Next: M2.
 - **2-month target = M0–M5** (re-baselined). At ~10–15 focused hrs/week, first-ever
   RabbitMQ + backend tests + Testcontainers, M0–M5 _is_ a full honest 2 months — and it's
   already the whole core interview story (choreography → outbox → signed webhooks → SKIP
@@ -55,15 +55,15 @@ _Goal: one event flows from one service to another over a real broker._
 
 _Goal: a decision flows back and updates the content's status. Two real hops._
 
-- [ ] Carry `tenantId` on every row and event — hardcode one dev tenant for now,
+- [x] Carry `tenantId` on every row and event — hardcode one dev tenant for now,
       so isolation isn't retrofitted later
-- [ ] Classification: stub-decide (threshold on a fake score) → publish `content.decided`
+- [x] Classification: stub-decide (threshold on a fake score) → publish `content.decided`
       (always "approved" for now; add the type to `packages/events`)
-- [ ] Ingest: consume `content.decided` → update `content.status` (Ingest owns the Content
+- [x] Ingest: consume `content.decided` → update `content.status` (Ingest owns the Content
       record's lifecycle; this is your single source for status/stats)
-- [ ] **First test (unit):** the decision-threshold function in Classification — pure logic,
+- [x] **First test (unit):** the decision-threshold function in Classification — pure logic,
       no I/O. Sets up the test runner (vitest/jest). A confidence win before the hard ones.
-- [ ] Prove it: one POST flows Ingest → Classification → back to Ingest; content ends `approved`.
+- [x] Prove it: one POST flows Ingest → Classification → back to Ingest; content ends `approved`.
       _(db-per-service becomes real at M2, when Classification gets its own dedup store. Review +
       its DB and the `content.needs_review` fork arrive at M5.)_
 

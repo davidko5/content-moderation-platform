@@ -11,7 +11,7 @@ Legend: 🔴 must-get-right · 🟡 should-do · 🟢 nice / resume polish
 
 ## M1 — choreography loop
 
-- [ ] 🟡 **Ingest's `content.decided` consumer must be idempotent** (not "monotonic" — the
+- [x] 🟡 **Ingest's `content.decided` consumer must be idempotent** (not "monotonic" — the
       reviewer's "uploaded stomps status back to pending" scenario does NOT apply here: Ingest
       sets `pending` synchronously at INSERT, and `content.uploaded` is consumed only by
       Classification). The real risk is just **duplicate `content.decided`** (at-least-once):
