@@ -8,6 +8,20 @@
       "when": 1781043884588,
       "tag": "0000_init",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1782045444144,
+      "tag": "0001_add_tenants",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1782055070219,
+      "tag": "0002_add_content_hash",
+      "breakpoints": true
     }
   ]
 }

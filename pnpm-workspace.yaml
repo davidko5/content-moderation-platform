@@ -6,4 +6,7 @@ packages:
 allowBuilds:
   "@nestjs/core": false # script is just `opencollective` (donation prompt) — skip
   esbuild: true
+  cpu-features: false
+  protobufjs: false
+  ssh2: false
   unrs-resolver: true # native binary used by eslint — build it

@@ -6,6 +6,7 @@
     "typescript": "^6.0.3"
   },
   "scripts": {
-    "dev": "pnpm -r --parallel --if-present start:dev"
+    "dev": "pnpm -r --parallel --if-present start:dev",
+    "db:studio": "pnpm -r --parallel --if-present db:studio"
   }
 }

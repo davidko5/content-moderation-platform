@@ -1,0 +1,2 @@
+ALTER TABLE "content" ADD COLUMN "content_hash" varchar(64) NOT NULL;--> statement-breakpoint
+ALTER TABLE "content" ADD CONSTRAINT "content_tenantId_contentHash_unique" UNIQUE("tenant_id","content_hash");
