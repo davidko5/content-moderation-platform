@@ -15,9 +15,10 @@ services:
     environment:
       POSTGRES_USER: dev
       POSTGRES_PASSWORD: dev
-      POSTGRES_DB: ingest
+      POSTGRES_MULTIPLE_DATABASES: ingest,classification
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./postgres-init:/docker-entrypoint-initdb.d:ro
 
 volumes:
   pgdata:

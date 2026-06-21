@@ -71,15 +71,26 @@ _Goal: a decision flows back and updates the content's status. Two real hops._
 
 _Goal: don't process twice, don't silently lose a message._
 
-- [ ] Content-hash dedup on upload (same payload → same content, no duplicate row)
-- [ ] Consumer dedup keys in Classification (and Ingest's `content.decided` consumer) —
-      survive redelivery. _Classification gets its own DB here → db-per-service is now real._
-- [ ] Manual ack only after successful processing; deliberately nack to test requeue
-- [ ] Dead-letter queue for failed classifications; force a failure, watch it land
-- [ ] **Test harness (integration):** Testcontainers — ephemeral Postgres + RabbitMQ, clean
-      state per run. Set up once here; reused by every later integration test.
-- [ ] **First integration test:** send the same message twice → assert one effect
-      (idempotency). Your first real backend integration test.
+Decomposed into one-concept steps (the flat list below was ~7 new concepts at once).
+Forks decided: **quorum** queues (not classic), Classification persists a `decisions` row,
+**minimal** text canonicalization (trim + Unicode NFC).
+
+- [x] **M2.0 — Testcontainers spike.** Ephemeral Postgres, write+read a row. De-risk the
+      harness alone before any logic. (Reused by every later integration test.)
+- [x] **M2.1 — Tenant as data.** `tenants` table + `content.tenant_id` FK; dropped the DB
+      default, service sets tenant explicitly; seeded the dev tenant. (Backlog 🔴 tenant scoping.)
+- [x] **M2.2 — Upload content-hash dedup.** `UNIQUE(tenant_id, content_hash)`; canonicalize
+      (trim + NFC) → SHA-256; `INSERT … ON CONFLICT DO NOTHING`, handle empty RETURNING,
+      publish only on a real insert. Same payload twice → one row, one publish.
+- [x] **M2.3 — Classification gets its own DB + `decisions` table.** db-per-service becomes
+      real; persist the decision before publishing (anchors M2.4 dedup + the M3 outbox).
+- [ ] **M2.4 — Consumer dedup.** `processed_messages(consumer, message_id)` PK; insert the key
+      in the SAME tx as the effect; duplicate → skip + ack. (Publish stays a dual-write until M3.)
+- [ ] **M2.5 — Manual nack + DLQ.** Quorum queues with `delivery-limit`; DLX via policy (not
+      queue args); poison message → DLQ, not an infinite requeue loop.
+- [ ] **M2.6 — First integration test: idempotency.** Same `content.uploaded` twice → one
+      `decisions` row + one `content.decided`. The milestone's proof.
+- [ ] **M2.7 — CI (optional).** Actions: lint + unit + the integration test on ephemeral infra.
 - [ ] Prove it: redeliver a message and double-POST a payload — neither double-processes.
 
 ---

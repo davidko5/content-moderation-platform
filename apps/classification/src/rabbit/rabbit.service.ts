@@ -3,6 +3,7 @@ import {
   OnModuleInit,
   OnApplicationShutdown,
   Logger,
+  Inject,
 } from '@nestjs/common';
 import amqp, {
   AmqpConnectionManager,
@@ -16,6 +17,9 @@ import {
   ContentUploaded,
 } from '@moderation/events';
 import { DecisionService } from '../decision/decision.service';
+import { DRIZZLE } from '../db/db.module';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import * as schema from '../db/schema';
 
 const EXCHANGE = 'moderation';
 const QUEUE = 'classification.content-uploaded';
@@ -29,7 +33,11 @@ export class RabbitService implements OnModuleInit, OnApplicationShutdown {
   private connection!: AmqpConnectionManager;
   private channel!: ChannelWrapper;
 
-  constructor(private decisionService: DecisionService) {}
+  constructor(
+    private decisionService: DecisionService,
+    @Inject(DRIZZLE)
+    private readonly db: NodePgDatabase<typeof schema>,
+  ) {}
 
   onModuleInit() {
     this.connection = amqp.connect([process.env.RABBITMQ_URL!]);
@@ -63,6 +71,13 @@ export class RabbitService implements OnModuleInit, OnApplicationShutdown {
     this.logger.log('Received event:', event);
 
     const decision = this.decisionService.decide(FAKE_SCORE, THRESHOLD);
+
+    await this.db.insert(schema.decisionsTable).values({
+      tenantId: event.tenantId,
+      contentId: event.contentId,
+      decision: decision,
+    });
+
     const contentDecidedEvent: ContentDecided = {
       contentId: event.contentId,
       tenantId: event.tenantId,
